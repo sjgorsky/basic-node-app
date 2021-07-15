@@ -6,6 +6,26 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
+const TodoTask = require('./models/TodoTask')
+
+app.use('/static', express.static("public"))
+
+app.use(express.urlencoded({ extended: true }))
+
+//POST method
+app.post('/',async (req, res) => {
+    const TodoTask = new TodoTask ({
+        content: req.body.content
+    })
+
+    try {
+        await todoTask.save()
+        res.redirect('/')
+    } catch (err) {
+        res.redirect('/')
+        
+    }
+})
 
 const indexRouter = require('./routes/index')
 
