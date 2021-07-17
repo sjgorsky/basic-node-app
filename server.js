@@ -1,36 +1,62 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
-//this throws an error
-//require('dotenv').config({ path: './config/.env'  })
+const dotenv =  require('dotenv')
 const express = require('express')
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
-const TodoTask = require('./models/TodoTask')
+
+const TodoTask = require('./models/todoTask')
+
+dotenv.config()
 
 app.use('/static', express.static("public"))
 
 app.use(express.urlencoded({ extended: true }))
 
+const indexRouter = require('./routes/index')
+
+//Set view engine as ejs
+app.set('view engine', 'ejs')
+
+//GET method
+app.get('/', (req, res) => {
+    TodoTask.find({}, (err, tasks) => {
+        res.render('todos.ejs', { todoTasks: tasks })
+    })
+})
+
 //POST method
-app.post('/',async (req, res) => {
-    const TodoTask = new TodoTask ({
+app.post('/', async(req, res) => {
+    const todoTask = new TodoTask ({
         content: req.body.content
     })
 
     try {
         await todoTask.save()
         res.redirect('/')
-    } catch (err) {
+    } catch (error) {
         res.redirect('/')
         
     }
 })
 
-const indexRouter = require('./routes/index')
+//UPDATE METHOD
+app
+.route('/edit/:id')
+.get((req, res) => {
+    const id = req.params.id
+    TodoTask.find({}, (err, tasks) => {
+        res.render('todoEdit.ejs', { todoTasks: tasks, idTask: id })
+    })
+})
+.post((req, res) => {
+    const id = req.params.idTodoTask.findByIdAndUpdate(id, { content: req.body.content }, err => {
+        if(err) return res.send(500, err)
+        res.redirect('/')
+    })
+})
 
-//Set view engine as ejs
-app.set('view engine', 'ejs')
 //Set up server views
 app.set('views', __dirname + '/views')
 app.set('layout', 'layouts/layout')
@@ -40,7 +66,10 @@ app.use(expressLayouts)
 app.use(express.static('public'))
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.MONGO_URI, {
+
+mongoose.set("useFindAndModify", false)
+
+mongoose.connect(process.env.DB_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true })
     const db = mongoose.connection

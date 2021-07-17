@@ -11,4 +11,4 @@ const todoTaskSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('TodoTast',todoTaskSchema)
+module.exports = mongoose.model('todoTask',todoTaskSchema)
