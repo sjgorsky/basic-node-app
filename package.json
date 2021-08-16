@@ -19,5 +19,6 @@
   "devDependencies": {
     "dotenv": "^10.0.0",
     "nodemon": "^2.0.12"
-  }
+  },
+  "heroku-run-build-script": true
 }
