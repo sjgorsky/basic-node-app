@@ -5,6 +5,7 @@ const dotenv =  require('dotenv')
 const express = require('express')
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
+const PORT = process.env.PORT || 3000
 
 const TodoTask = require('./models/todoTask')
 
