@@ -94,5 +94,5 @@ mongoose.connect(process.env.DB_CONNECT, {
 
 app.use('/', indexRouter)
 
-app.listen(process.env.PORT || 3000)
+app.listen(process.env.PORT)
 
